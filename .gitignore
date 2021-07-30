@@ -1,2 +1,7 @@
 secret.json
 *.sqlite3
+.idea
+*.log
+*.pot
+*.pyc
+__pycache__/
