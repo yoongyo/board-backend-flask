@@ -13,6 +13,7 @@ naming_convention = {
     "pk": "pk_%(table_name)s"
 }
 
+
 db = SQLAlchemy(metadata=MetaData(naming_convention=naming_convention))
 migrate = Migrate()
 
@@ -28,7 +29,6 @@ def create_app():
         migrate.init_app(app, db, render_as_batch=True)
     else:
         migrate.init_app(app, db)
-
 
     from . import models
     from .views import main_views

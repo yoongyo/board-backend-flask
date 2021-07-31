@@ -11,7 +11,8 @@ import re
 bp = Blueprint('main', __name__, url_prefix='/')
 
 
-@bp.route('/api/create', methods=['GET', 'POST'])
+
+@bp.route('/api/post/create', methods=['GET', 'POST'])
 def post_create():
     if request.method == "POST":
         content = request.get_json()["content"]
@@ -52,7 +53,7 @@ def post_create():
         return ""
 
 
-@bp.route('/api/post-list')
+@bp.route('/api/post/list')
 def get_post_list():
     posts = Post.query.all()
     post_list = []
@@ -66,7 +67,7 @@ def get_post_list():
         post_list.append(post)
     return json.dumps(post_list)
 
-@bp.route('/api/<int:post_id>')
+@bp.route('/api/post/<int:post_id>')
 def post_detail(post_id):
     post = Post.query.get(post_id)
     post.views += 1
@@ -129,13 +130,17 @@ def post_detail(post_id):
     }
     return json.dumps(post)
 
-def post_delete():
-    pass
+@bp.route('/api/post/delete/<int:post_id>', methods=["DELETE"])
+def post_delete(post_id):
+    post = Post.query.get_or_404(post_id)
+    db.session.delete(post)
+    db.session.commit()
+    return ""
 
 def post_edit():
     pass
 
-@bp.route('/api/comment/<int:post_id>/comment-create', methods=['GET', 'POST'])
+@bp.route('/api/comment/create/<int:post_id>', methods=['GET', 'POST'])
 def comment_create(post_id):
     post = Post.query.get(post_id)
     if request.method == "POST":
@@ -175,7 +180,7 @@ def comment_create(post_id):
             comment_list.append(comment)
         return json.dumps(comment_list)
 
-@bp.route('/api/nestedComment/<int:comment_id>/nestedComment-create', methods=['GET', 'POST'])
+@bp.route('/api/nestedComment/create/<int:comment_id>', methods=['GET', 'POST'])
 def nested_comment_create(comment_id):
     comment = Comment.query.get(comment_id)
     if request.method == "POST":
@@ -216,7 +221,7 @@ def nested_comment_create(comment_id):
         return json.dumps(comment_list)
 
 
-@bp.route('/api/lastComment/<int:nestedComment_id>/lastComment-create', methods=['GET', 'POST'])
+@bp.route('/api/lastComment/create/<int:nestedComment_id>', methods=['GET', 'POST'])
 def last_comment_create(nestedComment_id):
     nestedComment = NestedComment.query.get(nestedComment_id)
     if request.method == "POST":
