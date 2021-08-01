@@ -18,7 +18,7 @@ naming_convention = {
 
 db = SQLAlchemy(metadata=MetaData(naming_convention=naming_convention))
 migrate = Migrate()
-socketio = SocketIO()
+# socketio = SocketIO()
 
 
 def create_app():
@@ -36,13 +36,13 @@ def create_app():
     else:
         migrate.init_app(app, db)
 
-
+    # app.config['SECRET_KEY'] = 'secret!'
+    # app = socketio.init_app(app, cors_allowed_origins="*")
 
     from . import models
     from .views import main_views
     app.register_blueprint(main_views.bp)
-    app.config['SECRET_KEY'] = 'secret!'
-    app = socketio.init_app(app, cors_allowed_origins="*")
+
 
     return app
 
