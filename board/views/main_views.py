@@ -56,16 +56,14 @@ def background_task(title, content):
                 db.session.commit()
             except Exception as ex:
                 print(ex)
-        time.sleep(5)
-
 
         # socketio로 보내기 (emit)
-        post = {
-            'id': post.id,
-            'title': post.title,
-            'content': post.content,
-            'created_at': str(post.created_at),
-        }
+        # post = {
+        #     'id': post.id,
+        #     'title': post.title,
+        #     'content': post.content,
+        #     'created_at': str(post.created_at),
+        # }
 
 
 @bp.route('/api/post/create', methods=['GET', 'POST'])
