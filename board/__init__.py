@@ -28,7 +28,6 @@ def create_app():
 
     CORS(app, resources={r"*": {"origins": "*"}})
 
-    # app.config.from_envvar('APP_CONFIG_FILE')
     app.config.from_envvar('APP_CONFIG_FILE')
 
     db.init_app(app)
@@ -38,8 +37,8 @@ def create_app():
     else:
         migrate.init_app(app, db)
 
-    # app.config['SECRET_KEY'] = 'secret!'
-    # app = socketio.init_app(app, cors_allowed_origins="http://localhost:3000")
+    app.config['SECRET_KEY'] = 'secret!'
+    app = socketio.init_app(app, cors_allowed_origins="*")
 
     from . import models
     from .views import main_views
