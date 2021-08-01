@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-import config
+from config import production
 from sqlalchemy import MetaData
 from flask_cors import CORS
 from flask_socketio import SocketIO
@@ -27,8 +27,8 @@ def create_app():
 
     CORS(app, resources={r"*": {"origins": "*"}})
 
-    app.config.from_envvar('APP_CONFIG_FILE')
-
+    # app.config.from_envvar('APP_CONFIG_FILE')
+    app.config.from_object(production)
     db.init_app(app)
 
     if app.config['SQLALCHEMY_DATABASE_URI'].startswith("sqlite"):
