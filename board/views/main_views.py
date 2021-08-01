@@ -77,7 +77,7 @@ def post_create():
 
 @bp.route('/api/post/list')
 def get_post_list():
-    posts = Post.query.all()
+    posts = Post.query.order_by(Post.id.desc())
     post_list = []
     for i in posts:
         post = {
