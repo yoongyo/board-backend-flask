@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 import json
 from board import db, create_app
-# from board import db, socketio
+# from board import db, socketio, create_app
 from board.models import Post, Comment, NestedComment, LastComment, OpenGraph
 from datetime import datetime
 import requests
@@ -9,24 +9,11 @@ from bs4 import BeautifulSoup
 import re
 import threading
 import time
-import asyncio
-import websockets
 
-async def accept(websocket, path):
-    while True:
-        data = await websocket.recv()
-        print("receive : " + data)
-        await websocket.send("echo : " + data);
-
-start_server = websockets.serve(accept, "localhost", 9000)
-# 비동기로 서버를 대기한다.
-asyncio.get_event_loop().run_until_complete(start_server)
-asyncio.get_event_loop().run_forever()
-
+app = create_app()
 
 bp = Blueprint('main', __name__, url_prefix='/')
 
-app = create_app()
 
 # @socketio.on('post-create')
 # def handle_my_custom_event(json):
@@ -70,6 +57,15 @@ def background_task(title, content):
             except Exception as ex:
                 print(ex)
         time.sleep(5)
+
+
+        # socketio로 보내기 (emit)
+        post = {
+            'id': post.id,
+            'title': post.title,
+            'content': post.content,
+            'created_at': str(post.created_at),
+        }
 
 
 @bp.route('/api/post/create', methods=['GET', 'POST'])
@@ -165,8 +161,6 @@ def post_delete(post_id):
     db.session.commit()
     return ""
 
-def post_edit():
-    pass
 
 @bp.route('/api/comment/create/<int:post_id>', methods=['GET', 'POST'])
 def comment_create(post_id):

@@ -7,3 +7,6 @@ gevent
 Flask-SocketIO
 eventlet
 gevent-websocket
+pymysql
+cors
+websockets
