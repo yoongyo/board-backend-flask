@@ -24,7 +24,6 @@ socketio = SocketIO()
 def create_app():
     app = Flask(__name__)
 
-    app.config['SECRET_KEY'] = 'secret!'
 
     CORS(app, resources={r"*": {"origins": "*"}})
 
@@ -42,10 +41,9 @@ def create_app():
     from . import models
     from .views import main_views
     app.register_blueprint(main_views.bp)
-
     app.config['SECRET_KEY'] = 'secret!'
     app = socketio.init_app(app, cors_allowed_origins="*")
-    
+
     return app
 
 
