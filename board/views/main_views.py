@@ -1,22 +1,43 @@
 from flask import Blueprint, request
 import json
-from board import db
+from board import db, create_app
+# from board import db, socketio
 from board.models import Post, Comment, NestedComment, LastComment, OpenGraph
 from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 import re
+import threading
+import time
+import asyncio
+import websockets
+
+async def accept(websocket, path):
+    while True:
+        data = await websocket.recv()
+        print("receive : " + data)
+        await websocket.send("echo : " + data);
+
+start_server = websockets.serve(accept, "localhost", 9000)
+# 비동기로 서버를 대기한다.
+asyncio.get_event_loop().run_until_complete(start_server)
+asyncio.get_event_loop().run_forever()
 
 
 bp = Blueprint('main', __name__, url_prefix='/')
 
+app = create_app()
+
+# @socketio.on('post-create')
+# def handle_my_custom_event(json):
+#     print('received my event: ' + str(json))
+#     socketio.emit('my response', json)
 
 
-@bp.route('/api/post/create', methods=['GET', 'POST'])
-def post_create():
-    if request.method == "POST":
-        content = request.get_json()["content"]
-        post = Post(title=request.get_json()["title"], content=content, created_at=datetime.now().replace(microsecond=0))
+# 백그라운드 작업
+def background_task(title, content):
+    post = Post(title=title, content=content, created_at=datetime.now().replace(microsecond=0))
+    with app.app_context():
         db.session.add(post)
         db.session.commit()
 
@@ -48,8 +69,15 @@ def post_create():
                 db.session.commit()
             except Exception as ex:
                 print(ex)
+        time.sleep(5)
 
-        # 웹 소켓 사용
+
+@bp.route('/api/post/create', methods=['GET', 'POST'])
+def post_create():
+    if request.method == "POST":
+        content = request.get_json()["content"]
+        title = request.get_json()["title"]
+        threading.Thread(target=background_task, args=(title, content)).start()
         return ""
 
 

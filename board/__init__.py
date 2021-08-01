@@ -4,6 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 import config
 from sqlalchemy import MetaData
 from flask_cors import CORS
+from flask_socketio import SocketIO
+
 
 naming_convention = {
     "ix": 'ix_%(column_0_label)s',
@@ -16,11 +18,16 @@ naming_convention = {
 
 db = SQLAlchemy(metadata=MetaData(naming_convention=naming_convention))
 migrate = Migrate()
+socketio = SocketIO()
 
 
 def create_app():
     app = Flask(__name__)
+
+    app.config['SECRET_KEY'] = 'secret!'
+
     CORS(app, resources={r"*": {"origins": "*"}})
+
     app.config.from_object(config)
 
     db.init_app(app)
@@ -30,8 +37,14 @@ def create_app():
     else:
         migrate.init_app(app, db)
 
+    # app.config['SECRET_KEY'] = 'secret!'
+    # app = socketio.init_app(app, cors_allowed_origins="http://localhost:3000")
+
     from . import models
     from .views import main_views
     app.register_blueprint(main_views.bp)
 
     return app
+
+
+

@@ -3,3 +3,7 @@ flask-sqlalchemy
 psycopg2-binary
 beautifulsoup4
 requests
+gevent
+Flask-SocketIO
+eventlet
+gevent-websocket
