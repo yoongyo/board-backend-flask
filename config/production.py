@@ -1,7 +1,5 @@
 from config.default import *
 
-# SQLALCHEMY_DATABASE_URI = 'sqlite:///{}'.format(os.path.join(BASE_DIR, 'board.db'))
-
 SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://{user}:{pw}@{url}/{db}'.format(
     user='dbmasteruser',
     pw='Q5):6]XysspR:s2sd8K{cPfy2cs$j^=t',
