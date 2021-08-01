@@ -21,30 +21,30 @@ migrate = Migrate()
 socketio = SocketIO()
 
 
-# def create_app():
-app = Flask(__name__)
+def create_app():
+    app = Flask(__name__)
 
 
-CORS(app, resources={r"*": {"origins": "*"}})
+    CORS(app, resources={r"*": {"origins": "*"}})
 
-# app.config.from_envvar('APP_CONFIG_FILE')
-app.config.from_object(production)
-db.init_app(app)
+    # app.config.from_envvar('APP_CONFIG_FILE')
+    app.config.from_object(production)
+    db.init_app(app)
 
-if app.config['SQLALCHEMY_DATABASE_URI'].startswith("sqlite"):
-    migrate.init_app(app, db, render_as_batch=True)
-else:
-    migrate.init_app(app, db)
+    if app.config['SQLALCHEMY_DATABASE_URI'].startswith("sqlite"):
+        migrate.init_app(app, db, render_as_batch=True)
+    else:
+        migrate.init_app(app, db)
 
 
-from . import models
-from .views import main_views
-app.register_blueprint(main_views.bp)
+    from . import models
+    from .views import main_views
+    app.register_blueprint(main_views.bp)
 
-app.config['SECRET_KEY'] = 'secret!'
-app = socketio.init_app(app, cors_allowed_origins="*")
-socketio.run(app)
-    # return app
+    app.config['SECRET_KEY'] = 'secret!'
+    app = socketio.init_app(app, cors_allowed_origins="*")
+
+    return app
 
 
 
