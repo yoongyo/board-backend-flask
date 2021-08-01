@@ -10,9 +10,9 @@ import re
 import threading
 import time
 
-app = create_app()
 
 bp = Blueprint('main', __name__, url_prefix='/')
+app = create_app()
 
 
 # @socketio.on('post-create')
