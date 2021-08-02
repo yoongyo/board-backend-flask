@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 import json
-from board import db, create_app, socketio
+from board import db, create_app
 # from board import db, socketio, create_app
 from board.models import Post, Comment, NestedComment, LastComment, OpenGraph
 from datetime import datetime
@@ -15,10 +15,10 @@ bp = Blueprint('main', __name__, url_prefix='/')
 app = create_app()
 
 
-@socketio.on('post-create')
-def handle_my_custom_event(json):
-    print('received my event: ' + str(json))
-    socketio.emit('my response', json)
+# @socketio.on('post-create')
+# def handle_my_custom_event(json):
+#     print('received my event: ' + str(json))
+#     socketio.emit('my response', json)
 
 
 # 백그라운드 작업
